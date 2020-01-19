@@ -18,11 +18,7 @@ public class Solution {
 			return 1;
 		}
 
-		int count = 0;
-		count += rec(g, i+1, j, x, y);
-		count += rec(g, i, j+1, x, y);
-
-		return count;
+		return rec(g, i+1, j, x, y) + rec(g, i, j+1, x, y);
 	}
 
 	public static void main(String[] args) {
@@ -33,14 +29,11 @@ public class Solution {
 		int x = in.nextInt() - 1;
 		int y = in.nextInt() - 1;
 
-		in.nextLine();
-
 		int[][] grid = new int[n][m];
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				grid[i][j] = in.nextInt();
 			}
-			in.nextLine();
 		}
 
 		int count = rec(grid, 0, 0, x, y);

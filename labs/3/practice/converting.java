@@ -1,26 +1,20 @@
 import java.util.*;
+import java.math.*;
 
 public class Solution {
-	static int count;
+	static int min;
 
-	public static void f(int b, int c, int a) {
-		if (a == b) {
+	public static void f(int a, int b, int c, int k) {
+		if (a==b) {
+			if (k<min) {
+				min=k;
+			}
 			return;
 		}
-
-		count++;
-
-		if (a < b) {
-			f(b, c, a*c);
-			return;
-		}
-
-		if (a - b == 1) {
-			f(b, c, a-1);
-			return;
-		}
-
-		f(b, c, a-2);
+		if (k>min) return;
+		if (Math.abs(b-a) > Math.abs(b-a*c)) f(a*c,b,c,k+1);
+		if (a-b==1) f(a-1,b,c,k+1);
+		else if (a>b) f(a-2,b,c,k+1);
 	}
 
 	public static void main(String[] args) {
@@ -33,9 +27,9 @@ public class Solution {
 			}
 		}
 		for (int i = 0; i < n; i++) {
-			count = 0;
-			f(tests[i][1], tests[i][2], tests[i][0]);
-			System.out.println(count);
+			min = Integer.MAX_VALUE;
+			f(tests[i][0], tests[i][1], tests[i][2], 0);
+			System.out.println(min);
 		}
 	}
 }

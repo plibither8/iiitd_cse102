@@ -1,10 +1,10 @@
 import java.util.*;
 
 public class Solution {
-	public static int f(long a, int b) {
+	public static long f(long a, int b) {
 		int c = (int)a % 10;
-		if (a / 10 == 0) return (int)Math.pow(c,b);
-		return (int)Math.pow(c,b) + f(a/10,b);
+		if (a / 10 == 0) return (long)Math.pow(c,b);
+		return (long)Math.pow(c,b) + f(a/10,b);
 	}
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);

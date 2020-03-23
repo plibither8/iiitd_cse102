@@ -37,21 +37,23 @@ class Soln {
 
 		public void print(Node l) {
 			System.out.print("(");
+
 			if (l.left!=null) {
 				if (l.left.children > 0) print(l.left);
 				else System.out.print(l.left.data);
-			}
-			else System.out.print("*");
+			} else System.out.print("*");
+
 			System.out.print(","+l.data+",");
+
 			if (l.right!=null) {
 				if (l.right.children > 0) print(l.right);
 				else System.out.print(l.right.data);
-			}
-			else System.out.print("*");
+			} else System.out.print("*");
+
 			System.out.print(")");
 		}
 
-		public delete(Node n) {
+		public void delete(Node n) {
 			if (n.children == 0) {
 				if (n.parent.left == n) n.parent.left = null;
 				else n.parent.right = null;
@@ -59,18 +61,10 @@ class Soln {
 			}
 
 			if (n.children == 1) {
-				if (n.children.left != null) {
-					if (n.parent.left == n) {
-						n.parent.left = n.left;
-					} else {
-						n.parent.right = n.left;
-					}
+				if (n.parent.left == n) {
+					n.parent.left = n.left != null ? n.left : n.right;
 				} else {
-					if (n.parent.left == n) {
-						n.parent.left = n.right;
-					} else {
-						n.parent.right = n.right;
-					}
+					n.parent.right = n.right != null ? n.right : n.left;
 				}
 				return;
 			}

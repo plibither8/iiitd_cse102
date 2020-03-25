@@ -1,92 +1,85 @@
 import java.util.*;
 
-public class Solution {
+public class Tree {
 	public static class Node {
 		long data;
-		Node next;
+		Node left, right;
+		int lcount, rcount;
 		Node(long d) {
 			data=d;
+			smallCount=0;
 		}
 	}
 	static Node root;
+	static Boolean search(Node n, long data) {
+		if (n==null) return false;
+		if (n.data==data) return true;
+		return search(n.left, data) || search(n.right, data);
+	}
+	static Node insert(Node n, long data) {
+		if (n == null) {
+			return new Node(data);
+		}
+		if (data < n.data) n.left = insert(n.left, data);
+		else n.right = insert(n.right, data);
+		return n;
+	}	
+	static Node delete(Node n, long value) {
+		if(n == null) return null;
+		if(n.data>value) {
+			n.left = delete(n.left, value);
+		} else if(n.data<value) {
+			n.right = delete(n.right, value);
+		} else {
+			if(n.left!=null && n.right!=null) {
+				Node temp = n;
+				Node minRight = minBST(temp.right);
+				n.data = minRight.data;
+				delete(n.right, minRight.data);
+			} else if(n.left!=null) {
+				n = n.left;
+			} else if(n.right!=null) {
+				n = n.right;
+			} else {
+				n = null;
+			}
+		}
+		return n;
+	}
+	static Node minBST(Node root) {
+		if(root.left == null) {
+			return root;
+		} else {
+			return minBST(root.left);
+		}
+	}
 	public static void main(String[] args) {
+		Tree tree = new Tree();
 		Scanner in = new Scanner(System.in);
 		int n=in.nextInt();
 		for(int i=0;i<n;i++){
 			switch(in.next()){
 				case "INSERT": {
-					if (root == null) {
-						root = new Node(in.nextLong());
-					} else {
-						long x=in.nextLong();
-						Node t=root;
-						Node g=null;
-						int abort=0;
-						while (t!=null&&x>=t.data) {
-							if (x==t.data) {
-								abort=1;
-								break;
-							}
-							g=t;
-							t=t.next;
-						}
-						if (abort==0) {
-							Node k=new Node(x);
-							if(g!=null) {
-								k.next=t;
-								g.next=k;
-							} else {
-								k.next=root;
-								root=k;
-							}
-						}
+					long x=in.nextLong();
+					if (!tree.search(tree.root)) {
+						tree.root = tree.insert(tree.root);
 					}
 					break;
 				}
 				case "DELETE": {
 					long x = in.nextLong();
-					Node t=root;
-					Node p=null;
-					while(t.next!=null){
-						if (t.data==x) {
-							if(p==null) {
-								root=t.next;
-							} else {
-								p.next=t.next;
-							}
-							break;
-						}
-						p=t;
-						t=t.next;
-					}
+					bst.root = bst.delete(bst.root, x);
 					break;
 				}
 				case "FIND": {
 					int k=in.nextInt();
-					Node t=root;
-					Node g=null;
-					int b=0;
-					for(int m=0;m<k;m++){
-						if(t==null) {
-							b=1;
-							System.out.println(-1);
-							break;
-						}
-						g=t;
-						t=t.next;
-					}
-					if(b==0)System.out.println(g.data);
+					
 					break;
 				}
 				case "COUNT": {
 					int count=0;
 					long x=in.nextLong();
-					Node t=root;
-					while(t!=null&&t.data<x){
-						count++;
-						t=t.next;
-					}
-					System.out.println(count);
+					
 					break;
 				}
 			}

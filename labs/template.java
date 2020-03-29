@@ -1,83 +1,40 @@
-import java.io.DataInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Solution {
-	public static void main(String[] args) {
-		FastInput in = new FastInput(System.in);
+	public static void main(String[] args) throws IOException {
+		Reader in = new Reader(System.in);
 	}
 }
 
-class FastInput
-{
-	final private int BUFFER_SIZE = 1 << 16;
+class Reader {
+	static BufferedReader reader;
+	static StringTokenizer tokenizer;
 
-	private DataInputStream din;
-	private byte[] buffer;
-	private int bufferPointer, bytesRead;
-
-	public FastInput(InputStream in)
-	{
-		din = new DataInputStream(in);
-		buffer = new byte[BUFFER_SIZE];
-		bufferPointer = bytesRead = 0;
+	Reader(InputStream input) {
+		reader = new BufferedReader(new InputStreamReader(input));
+		tokenizer = new StringTokenizer("");
 	}
 
-	public long nextLong() throws Exception
-	{
-		long ret = 0;
-		byte c = read();
-		while (c <= ' ') c = read();
-		boolean neg = c == '-';
-		if (neg) c = read();
-		do
-		{
-			ret = ret * 10 + c - '0';
-			c = read();
-		} while (c > ' ');
-		if (neg) return -ret;
-		return ret;
+	static String next() throws IOException {
+		while (!tokenizer.hasMoreTokens()) {
+			tokenizer = new StringTokenizer(reader.readLine());
+		}
+		return tokenizer.nextToken();
 	}
 
-	//reads in the next string
-	public String next() throws Exception
-	{
-		StringBuilder ret =  new StringBuilder();
-		byte c = read();
-		while (c <= ' ') c = read();
-		do
-		{
-			ret = ret.append((char)c);
-			c = read();
-		} while (c > ' ');
-		return ret.toString();
+	static int nextInt() throws IOException {
+		return Integer.parseInt(next());
 	}
 
-	public int nextInt() throws Exception
-	{
-		int ret = 0;
-		byte c = read();
-		while (c <= ' ') c = read();
-		boolean neg = c == '-';
-		if (neg) c = read();
-		do
-		{
-			ret = ret * 10 + c - '0';
-			c = read();
-		} while (c > ' ');
-		if (neg) return -ret;
-		return ret;
+	static double nextDouble() throws IOException {
+		return Double.parseDouble(next());
 	}
 
-	private void fillBuffer() throws Exception
-	{
-		bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
-		if (bytesRead == -1) buffer[0] = -1;
-	}
-
-	private byte read() throws Exception
-	{
-		if (bufferPointer == bytesRead) fillBuffer();
-		return buffer[bufferPointer++];
+	static long nextLong() throws IOException {
+		return Long.parseLong(next());
 	}
 }

@@ -12,15 +12,15 @@ public class MinHeap {
 	}
 
 	static int parent(int pos) {
-		return pos / 2;
+		return (pos - 1) / 2;
 	}
 
 	static int leftChild(int pos) {
-		return pos * 2;
+		return pos * 2 + 1;
 	}
 
 	static int rightChild(int pos) {
-		return pos * 2 + 1;
+		return pos * 2 + 2;
 	}
 
 	static boolean isLeafNode(int pos) {

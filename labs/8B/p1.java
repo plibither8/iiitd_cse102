@@ -1,11 +1,11 @@
 import java.util.*;
 
-public class MaxHeap {
+public class MinHeap {
 	static long[] Heap;
 	static int size;
 	static int maxSize;
 
-	MaxHeap(int maxSize) {
+	MinHeap(int maxSize) {
 		this.maxSize = maxSize;
 		this.size = -1;
 		Heap = new long[maxSize];
@@ -24,7 +24,7 @@ public class MaxHeap {
 	}
 
 	static boolean isLeafNode(int pos) {
-		return pos > size / 2 && pos < size;
+		return pos > (size - 1) / 2 && pos < size;
 	}
 
 	static boolean hasSingleChild(int pos) {
@@ -32,8 +32,8 @@ public class MaxHeap {
 	}
 
 	static boolean isViolation(int pos) {
-		return Heap[leftChild(pos)] > Heap[pos] ||
-			Heap[rightChild(pos)] > Heap[pos];
+		return Heap[leftChild(pos)] < Heap[pos] ||
+			Heap[rightChild(pos)] < Heap[pos];
 	}
 
 	static void swap(int a, int b) {
@@ -49,7 +49,7 @@ public class MaxHeap {
 		int rightIndex = rightChild(pos);
 
 		if (isViolation(pos)) {
-			if (Heap[leftIndex] > Heap[rightIndex]) {
+			if (Heap[leftIndex] < Heap[rightIndex]) {
 				swap(leftIndex, pos);
 				heapify(leftIndex);
 			} else {
@@ -63,18 +63,18 @@ public class MaxHeap {
 		Heap[++size] = val;
 
 		int index = size;
-		while(index > 0  && Heap[parent(index)] < Heap[index]) {
+		while(index > 0  && Heap[parent(index)] > Heap[index]) {
 			swap(parent(index), index);
 			index = parent(index);
 		}
 	}
 
-	static long extractMax() {
-		long max = Heap[0];
+	static long extractMin() {
+		long min = Heap[0];
 		Heap[0] = Heap[size];
 		size--;
 		heapify(0);
-		return max;
+		return min;
 	}
 
 	static void heapifyUpwards(int pos) {
@@ -86,7 +86,7 @@ public class MaxHeap {
 
 	static void change(int pos, long delta) {
 		Heap[pos] += delta;
-		if (delta > 0) {
+		if (delta < 0) {
 			heapifyUpwards(pos);
 		} else {
 			heapify(pos);
@@ -105,6 +105,7 @@ public class MaxHeap {
 	}
 
 	static void printDirect() {
+		System.out.print("size="+size+": ");
 		for (int i = 0; i < maxSize; i++) System.out.print(Heap[i]+" ");
 		System.out.println();
 	}
@@ -116,36 +117,54 @@ public class MaxHeap {
 		}
 	}
 
-	static void reheapify() {
-		while(size < maxSize - 1) {
+	static void reheapify(int finalSize) {
+		size = -1;
+		while(size < finalSize - 1) {
 			long val = Heap[size+1];
 			insert(val);
 		}
 	}
 
-	static MaxHeap merge(MaxHeap A, MaxHeap B) {
+	static MinHeap merge(MinHeap A, MinHeap B) {
 		int totalSize = A.maxSize + B.maxSize;
-		MaxHeap C = new MaxHeap(totalSize);
+		MinHeap C = new MinHeap(totalSize);
 		for (int i = 1; i <= A.size; i++) C.insert(A.Heap[i]);
 		for (int i = 1; i <= B.size; i++) C.insert(B.Heap[i]);
 		return C;
 	}
 
 	public static void main(String args[]) {
-		MaxHeap maxHeap = new MaxHeap(15);
-		maxHeap.insert(5);
-		maxHeap.insert(3);
-		maxHeap.insert(17);
-		maxHeap.insert(10);
-		maxHeap.insert(84);
-		maxHeap.insert(19);
-		maxHeap.insert(6);
-		maxHeap.insert(22);
-		maxHeap.insert(9);
-		maxHeap.printDirect();
-		maxHeap.heapSort();
-		maxHeap.printDirect();
-		maxHeap.reheapify();
-		maxHeap.printDirect();
+		Scanner in = new Scanner(System.in);
+		int n = in.nextInt();
+		long k = in.nextLong();
+		MinHeap minHeap = new MinHeap(n);
+		long sum = 0;
+		for (int i=0;i<n;i++) {
+			long x = in.nextLong();
+			sum+=x;
+			minHeap.insert(x);
+		}
+		if (sum < k) {
+			System.out.println(-1);
+			return;
+		}
+
+		long count = 0;
+
+		while(minHeap.Heap[0] < k && minHeap.size > 0) {
+			int index;
+			if (minHeap.size == 1) {
+				index = 1;
+			} else {
+				index = minHeap.Heap[1] < minHeap.Heap[2] ? 1 : 2;
+			}
+			minHeap.Heap[index] += minHeap.Heap[0];
+			minHeap.swap(0, minHeap.size--);
+			minHeap.heapify(index);
+			minHeap.heapify(0);
+			count++;
+		}
+
+		System.out.println(count);
 	}
 }

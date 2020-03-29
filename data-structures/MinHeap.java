@@ -24,7 +24,7 @@ public class MinHeap {
 	}
 
 	static boolean isLeafNode(int pos) {
-		return pos > (size - 1) / 2 && pos < size;
+		return pos > size / 2 && pos < size;
 	}
 
 	static boolean hasSingleChild(int pos) {

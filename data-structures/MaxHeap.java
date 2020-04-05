@@ -132,20 +132,22 @@ public class MaxHeap {
 	}
 
 	public static void main(String args[]) {
-		MaxHeap maxHeap = new MaxHeap(15);
-		maxHeap.insert(5);
-		maxHeap.insert(3);
-		maxHeap.insert(17);
+		MaxHeap maxHeap = new MaxHeap(8);
+		maxHeap.insert(21);
+		maxHeap.insert(18);
+		maxHeap.insert(14);
 		maxHeap.insert(10);
-		maxHeap.insert(84);
-		maxHeap.insert(19);
-		maxHeap.insert(6);
-		maxHeap.insert(22);
 		maxHeap.insert(9);
+		maxHeap.insert(11);
+		maxHeap.insert(6);
+		maxHeap.insert(1);
+		maxHeap.swap(maxHeap.size--, 0);
+		maxHeap.heapify(0);
+		maxHeap.insert(7);
 		maxHeap.printDirect();
-		maxHeap.heapSort();
-		maxHeap.printDirect();
-		maxHeap.reheapify();
-		maxHeap.printDirect();
+		// maxHeap.heapSort();
+		// maxHeap.printDirect();
+		// maxHeap.reheapify();
+		// maxHeap.printDirect();
 	}
 }

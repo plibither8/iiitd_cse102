@@ -49,21 +49,21 @@ public class Huffman {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		size = 122 - 97 + 1; // a=97; z=122 (char values)
-		freq = new int[size];
+	// public static void main(String[] args) throws IOException {
+	// 	size = 122 - 97 + 1; // a=97; z=122 (char values)
+	// 	freq = new int[size];
 
-		Reader in = new Reader(System.in);
-		String input = in.next();
+	// 	Reader in = new Reader(System.in);
+	// 	String input = in.next();
 
-		for (int i=0;i<input.length();i++){
-			int ch = (int)input.charAt(i);
-			freq[ch-97]++;
-		}
+	// 	for (int i=0;i<input.length();i++){
+	// 		int ch = (int)input.charAt(i);
+	// 		freq[ch-97]++;
+	// 	}
 
-		encode();
-		for (String s:encoded) System.out.println(s);
-	}
+	// 	encode();
+	// 	for (String s:encoded) System.out.println(s);
+	// }
 }
 
 class Node {

@@ -18,21 +18,76 @@ public class Solution {
 		e = in.nextInt();
 
 		nodes = new Node[n+1];
-		for (int i=1;i<=n;i++) nodes[i]=new Node(i);
-		int[][] tuns=new int[2*n][2];
+		DLL pending=new DLL();
+
+		Node root=nodes[e]=new Node(e,null);
+		boolean[] inMainTree=new boolean[n+1];
+		inMainTree[e]=true;
+
+		int[][] tuns=new int[n][2];
 
 		for(int i=1;i<n;i++){
 			int u = in.nextInt();
 			int v = in.nextInt();in.next();
-			tuns[i]=new int[]{u,nodes[u].nbrs.size()};
-			tuns[i+1]=new int[]{v,nodes[v].nbrs.size()};
-			nodes[u].nbrs.add(nodes[v]);
-			nodes[v].nbrs.add(nodes[u]);
+
+			if(!inMainTree[u]&&!inMainTree[v]){
+				pending.add(u,v,i);
+				continue;
+			}
+
+			if(inMainTree[v]){
+				int t=u;
+				u=v;
+				v=t;
+			}
+
+			tuns[i]=new int[]{u,nodes[u].children.size()};
+			nodes[v]=new Node(v,nodes[u]);
+			nodes[u].children.add(nodes[v]);
+			inMainTree[u]=true;
+			inMainTree[v]=true;
+		}
+
+		Item pn=pending.top;
+		while(pn!=null){
+			if(!inMainTree[pn.edge[0]]&&!inMainTree[pn.edge[1]]) {
+				pn=pn.next;
+				if(pn==null){
+					pn=pending.top;
+				}
+				continue;
+			}
+
+			int u,v;
+			if(inMainTree[pn.edge[0]]){
+				u=pn.edge[0];
+				v=pn.edge[1];
+			} else {
+				v=pn.edge[0];
+				u=pn.edge[1];
+			}
+
+			tuns[pn.edge[2]]=new int[]{u,nodes[u].children.size()};
+			nodes[v]=new Node(v,nodes[u]);
+			nodes[u].children.add(nodes[v]);
+			inMainTree[u]=true;
+			inMainTree[v]=true;
+
+			pending.delete(pn);
+			pn=pn.next;
+
+			if(pn==null){
+				pn=pending.top;
+			}
 		}
 
 		for (int i=0;i<s;i++) {
 			in.next();
 		}
+
+		// for(int[] k:tuns) {
+		// 	System.out.println(k[0]+" "+k[1]);
+		// }
 
 		for(int i=0;i<q;i++){
 			boolean[] visited = new boolean[n+1];
@@ -41,11 +96,16 @@ public class Solution {
 			int t=in.nextInt();
 			int r=in.nextInt();
 
-			nodes[tuns[t][0]].nbrs.set(tuns[t][1],null);
-			nodes[tuns[t+1][0]].nbrs.set(tuns[t+1][1],null);
-			Node subtree=nodes[r];
+			nodes[tuns[t][0]].children.get(tuns[t][1]).blocked=true;
 
-			dfs(visited,subtree);
+			Node parent=nodes[r];
+			while(parent!=null&&!parent.blocked){
+				if(parent.b==e){
+					escaped=true;
+					break;
+				}
+				parent=parent.p;
+			}
 
 			if (escaped) {
 				System.out.println("escaped");
@@ -53,30 +113,53 @@ public class Solution {
 			}
 
 			System.out.println(0);
-		}
-	}
-
-	static void dfs(boolean[] visited, Node n){
-		if(n==null)return;
-		if(escaped)return;
-		if(visited[n.b])return;
-		visited[n.b]=true;
-		if(n.b==e){
-			escaped=true;
-			return;
-		}
-
-		for(Node nbr:nodes[n.b].nbrs){
-			dfs(visited,nbr);
+			nodes[tuns[t][0]].children.get(tuns[t][1]).blocked=false;
 		}
 	}
 }
 
 class Node {
 	int b;
-	ArrayList<Node> nbrs=new ArrayList<Node>();
-	Node(int b){
+	boolean blocked=false;
+	Node p;
+	ArrayList<Node> children=new ArrayList<Node>();
+	Node(int b, Node p){
 		this.b=b;
+		this.p=p;
+	}
+}
+
+class Item {
+	Item next=null;
+	Item prev=null;
+	int[] edge;
+	Item(int u, int v, int i){
+		this.edge=new int[]{u,v,i};
+	}
+}
+
+class DLL {
+	Item top=null;
+	void add(int u, int v, int i){
+		Item new_Item = new Item(u,v,i);
+		new_Item.next = top;
+		new_Item.prev = null;
+		if (top != null) top.prev = new_Item;
+		top = new_Item;
+	}
+	void delete(Item del){
+		if (top == null || del == null) { 
+			return; 
+		} 
+		if (top == del) { 
+			top = del.next; 
+		} 
+		if (del.next != null) { 
+			del.next.prev = del.prev; 
+		} 
+		if (del.prev != null) { 
+			del.prev.next = del.next; 
+		}
 	}
 }
 
